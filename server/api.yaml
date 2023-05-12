@@ -1,0 +1,364 @@
+openapi: 3.0.0
+info:
+  title: Chai Ke Nashedi API
+  description: Optional multiline or single-line description in [CommonMark](http://commonmark.org/help/) or HTML.
+  version: 1.0
+
+servers:
+  - url: http://localhost:8080/
+    description: Local server
+  - url: https://chai-ke.onrender.com/
+    description: Pre Production server
+  - url: https://chai-ke.onrender.com/
+    description: Production server
+
+components:
+  securitySchemes:
+    ApiTokenss: # arbitrary name for the security scheme
+      type: http
+      scheme: bearer
+
+    ApiKey: # arbitrary name for the security scheme
+      type: apiKey
+      in: header # can be "header", "query" or "cookie"
+      name: apikey
+
+loginComponent:
+  schemas:
+    User:
+      properties:
+        email:
+          type: string
+        password:
+          type: string      
+
+addCKnItemsComponent:
+  schemas:
+    Items:
+      properties:
+        chai:
+          type: number
+        chaiQuantity:
+          type: number 
+        coffee:
+          type: number
+        coffeeQuantity:
+          type: number   
+        cigarette:
+          type: number
+        cigaretteQuantity:
+          type: number 
+        date:
+          type: string
+        time:
+          type: string 
+        orderStatus:
+          type: string
+        paymentMode:
+          type: string
+        orderTotal:
+          type: number 
+addCategoryComponent:
+  schemas:
+    category:
+      properties:
+       
+        categoryName:
+          type: string
+          example: "nameOfCategory"
+        categoryType:
+          type: string
+          example: "normal/description" 
+        categoryExpense:
+          type: string
+          example: "daily/monthly"
+
+
+paths:
+  /api/logIn:
+    post:
+      tags:
+        - Login
+      summary: Returns a Token.
+      requestBody:
+        description: Optional description in *Markdown*
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/loginComponent/schemas/User'
+
+      responses:
+        '201':
+          description: Created
+  
+  paths:
+  /api/getCounterNumber:
+    get:
+      tags:
+        - Get Order Number
+      security:
+        - ApiTokenss: []
+        - ApiKey: []
+      summary: Returns Order Number.
+
+      responses:
+         "200":
+          description: A user object.
+         "400":
+          description: The specified user ID is invalid (not a number).
+         "404":
+          description: A user with the specified ID was not found.
+          default:
+          description: Unexpected error
+
+  paths:
+  /api/deleteCounterNumber:
+    put:
+      tags:
+        - Clear Order Number
+      security:
+        - ApiTokenss: []
+        - ApiKey: []
+      summary: Returns Order Number.
+
+      responses:
+        '201':
+          description: Order Number Cleared
+
+  paths:
+  /api/getTotalByDate?date={date}:
+    get:
+      tags:
+        - Get Total Amount Of Given Date
+      security:
+        - ApiTokenss: []
+        - ApiKey: []
+      summary: Returns Total Amount Of Given Date.
+      parameters:
+        - name: date
+          in: path
+          required: true
+          description: Parameter description in CommonMark or HTML.
+          schema:
+            type: string
+            example: "Users String"
+            minimum: 1  
+      responses:
+        "200":
+          description: OK
+
+
+
+  paths:
+  /api/getCknItems:
+    get:
+      tags:
+        - Get ALL CKN Items
+      security:
+        - ApiTokenss: []
+        - ApiKey: []
+      summary: Returns All Items.
+
+      responses:
+         "200":
+          description: A user object.
+         "400":
+          description: The specified user ID is invalid (not a number).
+         "404":
+          description: A user with the specified ID was not found.
+          default:
+          description: Unexpected error
+
+  paths:
+  /api/getCknItemsByDate?date={date}:
+    get:
+      tags:
+        - Get ALL CKN Items By Date
+      security:
+        - ApiTokenss: []
+        - ApiKey: []
+      summary: Returns All Items By Date.
+      parameters:
+        - name: date
+          in: path
+          required: true
+          description: Parameter description in CommonMark or HTML.
+          schema:
+            type: string
+            example: "Users String"
+            minimum: 1
+      responses:
+        "200":
+          description: OK
+  paths:
+  /api/getCknItemsById?_id={id}:
+    get:
+      tags:
+        - Get CKN items by Id
+      security:
+        - ApiTokenss: []
+        - ApiKey: []
+      summary: Returns Items By Id.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Parameter description in CommonMark or HTML.
+          schema:
+            type: string
+            example: "Users String"
+            minimum: 1
+      responses:
+        "200":
+          description: OK   
+
+  paths:
+  /api/getCknItemsByDateAndStatus?date={date}&status={status}:
+    get:
+      tags:
+        - Get ALL CKN Items By Date And Status
+      security:
+        - ApiTokenss: []
+        - ApiKey: []
+      summary: Returns All Items By Date And Status.
+      parameters:
+        - name: date
+          in: path
+          required: true
+          description: Parameter description in CommonMark or HTML.
+          schema:
+            type: string
+            example: "Users String"
+            minimum: 1
+
+        - name: status
+          in: path
+          required: true
+          description: Parameter description in CommonMark or HTML.
+          schema:
+            type: string
+            example: "Users String"
+            minimum: 1    
+      responses:
+        "200":
+          description: OK
+
+  paths:
+  /api/getTotalByDate?date={date}:
+    get:
+      tags:
+        - Get Total Amounts By Date
+      security:
+        - ApiTokenss: []
+        - ApiKey: []
+      summary: Returns Total Amounts By Date.
+      parameters:
+        - name: date
+          in: path
+          required: true
+          description: Parameter description in CommonMark or HTML.
+          schema:
+            type: string
+            example: "Users String"
+            minimum: 1
+      responses:
+        "200":
+          description: OK   
+
+  paths:
+  /api/setCknItems:
+    post:
+      tags:
+        - Add CKN Items
+      security:
+        - ApiTokenss: []
+        - ApiKey: []
+      summary: Returns added Item.
+      requestBody:
+        description: Optional description in *Markdown*
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/addCKnItemsComponent/schemas/Items'
+
+      responses:
+        '201':
+          description: Created
+
+  paths:
+  /api/updateCknItems?id={id}:
+    put:
+      tags:
+        - Update CKN Items
+      security:
+        - ApiTokenss: []
+        - ApiKey: []
+      summary: Returns Updated Item.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Parameter description in CommonMark or HTML.
+          schema:
+            type: string
+            example: "Users String"
+            minimum: 1
+      requestBody:
+        description: Optional description in *Markdown*
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/addCKnItemsComponent/schemas/Items'
+
+      responses:
+        '201':
+          description: Updated
+
+
+  paths:
+  /api/removeCknItemsById?id={id}:
+    delete:
+      tags:
+        - Delete CKN Items
+      security:
+        - ApiTokenss: []
+        - ApiKey: []
+      summary: Returns Deleted Item.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Parameter description in CommonMark or HTML.
+          schema:
+            type: string
+            example: "Users String"
+            minimum: 1
+
+      responses:
+        '201':
+          description: Deleted
+
+
+  paths:
+  /api/addCategory:
+    post:
+      tags:
+        - Add New Category
+      security:
+        - ApiTokenss: []
+        - ApiKey: []
+      summary: Returns New Category.
+      requestBody:
+        description: Optional description in *Markdown*
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/addCategoryComponent/schemas/category'
+
+      responses:
+        '201':
+          description: Created
